@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
+
+var now = new DateTime.now();
+Random rnd = new Random(now.millisecondsSinceEpoch);
 
 void main() => runApp(MyApp());
 
@@ -9,103 +13,149 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.cyan,
+        primaryColor: Colors.cyan[200],
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: Puzzle(title: 'Flutter Slide Puzzle'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
+class Puzzle extends StatefulWidget {
+  Puzzle({Key key, this.title}) : super(key: key);
   final String title;
-
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _PuzzleState createState() => _PuzzleState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _PuzzleState extends State<Puzzle> {
+  final nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
+  final white = Colors.white70;
+  List<int> scrambled = [];
+  var _green = Colors.greenAccent;
+  bool _scrambled = true;
+  int min = 0, max = 16;
 
-  void _incrementCounter() {
+  void scramble() {
+    int num = rnd.nextInt(max);
+    if (scrambled.length == nums.length) {
+      return;
+    }
+
+    if (scrambled.contains(num)) {
+      scramble();
+    } else {
+      scrambled.add(num);
+    }
+
+    if (scrambled.length < nums.length) {
+      scramble();
+    }
+  }
+
+  void moveTile(tileClicked) {
+    int blankTile = scrambled.indexOf(0);
+    int selectedTile = scrambled.indexOf(tileClicked);
+    if (tileClicked == 0) {
+      return;
+    }
+    if (blankTile == 3 && selectedTile == 4) {
+      return;
+    } else if (blankTile == 7 && selectedTile == 8) {
+      return;
+    } else if (blankTile == 11 && selectedTile == 12) {
+      return;
+    } else if (blankTile == 4 && selectedTile == 3) {
+      return;
+    } else if (blankTile == 8 && selectedTile == 7) {
+      return;
+    } else if (blankTile == 12 && selectedTile == 11) {
+      return;
+    } else if (selectedTile - 4 == blankTile ||
+        selectedTile + 4 == blankTile ||
+        selectedTile - 1 == blankTile ||
+        selectedTile + 1 == blankTile) {
+      setState(() {
+        scrambled[selectedTile] = 0;
+        scrambled[blankTile] = tileClicked;
+      });
+    } else {
+      return;
+    }
+  }
+
+  void changeColor() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _green = Colors.pinkAccent;
     });
+  }
+
+  Widget gamecell(context, num) {
+    bool isBlank = num == 0;
+    return GestureDetector(
+      onTap: () {
+        // changeColor();
+        moveTile(num);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: isBlank ? white : _green,
+          border: Border.all(),
+        ),
+        child: Center(
+          child: Text(
+            "${isBlank ? ' ' : num}",
+            style: Theme.of(context).textTheme.headline,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    scramble();
     return Scaffold(
+      backgroundColor: Colors.blue[100],
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Center(child: Text(widget.title)),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.all(10.0),
+              margin: EdgeInsets.all(10.0),
+              child: GridView.count(
+                crossAxisCount: 4,
+                crossAxisSpacing: 5.0,
+                mainAxisSpacing: 5.0,
+                children: List.generate(scrambled.length, (index) {
+                  return gamecell(context, scrambled[index]);
+                }),
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
+          ),
+          Center(
+            child: Container(
+              padding: EdgeInsets.all(10.0),
+              child: RaisedButton(
+                highlightElevation: 6.0,
+                color: Colors.lightBlueAccent,
+                splashColor: Colors.blue[100],
+                onPressed: (() {
+                  scrambled.clear();
+                  setState(() {
+                    _scrambled = !_scrambled;
+                  });
+                  scramble();
+                }),
+                child: Text('Click to Scramble!'),
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

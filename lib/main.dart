@@ -30,6 +30,7 @@ class Puzzle extends StatefulWidget {
 
 class _PuzzleState extends State<Puzzle> {
   final nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
+  final test = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0, 13, 14, 15];
   final white = Colors.white70;
   List<int> scrambled = [];
   var _green = Colors.greenAccent;
@@ -51,6 +52,41 @@ class _PuzzleState extends State<Puzzle> {
     if (scrambled.length < nums.length) {
       scramble();
     }
+  }
+
+  bool checkWin() {
+    bool win = true;
+    for (var i = 0; i < nums.length; i++) {
+      win = nums[i] == scrambled[i];
+      if (!win) {
+        break;
+      }
+    }
+    return win;
+  }
+
+  void _handleWin() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("GREAT JOB"),
+            content: Text("You Solved the Puzzle!"),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    scrambled.clear();
+                    scramble();
+                    setState(() {
+                      _scrambled = !_scrambled;
+                    });
+
+                    Navigator.pop(context);
+                  },
+                  child: Text("Play again")),
+            ],
+          );
+        });
   }
 
   void moveTile(tileClicked) {
@@ -79,22 +115,18 @@ class _PuzzleState extends State<Puzzle> {
         scrambled[selectedTile] = 0;
         scrambled[blankTile] = tileClicked;
       });
+      if (checkWin()) {
+        _handleWin();
+      }
     } else {
       return;
     }
-  }
-
-  void changeColor() {
-    setState(() {
-      _green = Colors.pinkAccent;
-    });
   }
 
   Widget gamecell(context, num) {
     bool isBlank = num == 0;
     return GestureDetector(
       onTap: () {
-        // changeColor();
         moveTile(num);
       },
       child: Container(

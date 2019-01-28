@@ -30,11 +30,9 @@ class Puzzle extends StatefulWidget {
 
 class _PuzzleState extends State<Puzzle> {
   final nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
-  final test = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0, 13, 14, 15];
-  final white = Colors.white70;
+  final _white = Colors.white70;
+  final _green = Colors.greenAccent;
   List<int> scrambled = [];
-  var _green = Colors.greenAccent;
-  bool _scrambled = true;
   int min = 0, max = 16;
 
   void scramble() {
@@ -77,10 +75,7 @@ class _PuzzleState extends State<Puzzle> {
                   onPressed: () {
                     scrambled.clear();
                     scramble();
-                    setState(() {
-                      _scrambled = !_scrambled;
-                    });
-
+                    setState(() {});
                     Navigator.pop(context);
                   },
                   child: Text("Play again")),
@@ -131,7 +126,7 @@ class _PuzzleState extends State<Puzzle> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: isBlank ? white : _green,
+          color: isBlank ? _white : _green,
           border: Border.all(),
         ),
         child: Center(
@@ -177,9 +172,7 @@ class _PuzzleState extends State<Puzzle> {
                 splashColor: Colors.blue[100],
                 onPressed: (() {
                   scrambled.clear();
-                  setState(() {
-                    _scrambled = !_scrambled;
-                  });
+                  setState(() {});
                   scramble();
                 }),
                 child: Text('Click to Scramble!'),

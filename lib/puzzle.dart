@@ -137,23 +137,25 @@ class _PuzzleState extends State<Puzzle> {
       ),
       body: Column(
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.all(10.0),
-            width: double.infinity,
-            height: 400.0,
-            child: GridView.count(
-              crossAxisCount: 4,
-              crossAxisSpacing: 5.0,
-              mainAxisSpacing: 5.0,
-              children: List.generate(scrambled.length, (index) {
-                return gamecell(scrambled[index]);
-              }),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.all(10.0),
+              margin: EdgeInsets.all(10.0),
+              width: double.infinity,
+              child: GridView.count(
+                crossAxisCount: 4,
+                crossAxisSpacing: 5.0,
+                mainAxisSpacing: 5.0,
+                children: List.generate(scrambled.length, (index) {
+                  return gamecell(scrambled[index]);
+                }),
+              ),
             ),
           ),
           Center(
             child: Container(
               height: 80.0,
+              margin: EdgeInsets.only(bottom: 20.0),
               padding: EdgeInsets.all(10.0),
               child: RaisedButton(
                 highlightElevation: 6.0,

@@ -113,6 +113,7 @@ class _PuzzleState extends State<Puzzle> {
         decoration: BoxDecoration(
           color: isBlank ? _white : _green,
           border: Border.all(),
+          borderRadius: BorderRadius.circular(10.0),
         ),
         child: Center(
           child: Text(

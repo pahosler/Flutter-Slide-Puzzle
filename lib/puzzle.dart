@@ -18,6 +18,90 @@ class _PuzzleState extends State<Puzzle> {
   List<int> scrambled = [];
   int min = 0, max = 16;
 
+  @override
+  Widget build(BuildContext context) {
+    scramble();
+    return Scaffold(
+      backgroundColor: Colors.blue[100],
+      appBar: AppBar(
+        title: Center(child: Text(widget.title)),
+      ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: board(),
+          ),
+          Center(
+            child: scrambleButton(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget board() {
+    return Container(
+      padding: EdgeInsets.all(10.0),
+      margin: EdgeInsets.all(10.0),
+      width: double.infinity,
+      child: GridView.count(
+        crossAxisCount: 4,
+        crossAxisSpacing: 5.0,
+        mainAxisSpacing: 5.0,
+        children: List.generate(scrambled.length, (index) {
+          return gameTile(scrambled[index]);
+        }),
+      ),
+    );
+  }
+
+  Widget gameTile(num) {
+    bool isBlank = num == 0;
+    return GestureDetector(
+      onTap: () {
+        moveTile(num);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: isBlank ? _white : _green,
+          border: Border.all(),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Center(
+          child: Text(
+            "${isBlank ? ' ' : num}",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 32,
+                color: Colors.green[700]),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget scrambleButton() {
+    return Container(
+      height: 80.0,
+      margin: EdgeInsets.only(bottom: 20.0),
+      padding: EdgeInsets.all(10.0),
+      child: RaisedButton(
+        highlightElevation: 6.0,
+        color: Colors.lightBlueAccent,
+        splashColor: Colors.blue[100],
+        onPressed: (() {
+          scrambled.clear();
+          setState(() {});
+          scramble();
+        }),
+        child: Text(
+          'Click to Scramble!',
+          style: TextStyle(fontSize: 18, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
   void scramble() {
     int num = rnd.nextInt(max);
     if (scrambled.length == nums.length) {
@@ -100,90 +184,6 @@ class _PuzzleState extends State<Puzzle> {
           ],
         );
       },
-    );
-  }
-
-  Widget scrambleButton() {
-    return Container(
-      height: 80.0,
-      margin: EdgeInsets.only(bottom: 20.0),
-      padding: EdgeInsets.all(10.0),
-      child: RaisedButton(
-        highlightElevation: 6.0,
-        color: Colors.lightBlueAccent,
-        splashColor: Colors.blue[100],
-        onPressed: (() {
-          scrambled.clear();
-          setState(() {});
-          scramble();
-        }),
-        child: Text(
-          'Click to Scramble!',
-          style: TextStyle(fontSize: 18, color: Colors.white),
-        ),
-      ),
-    );
-  }
-
-  Widget board() {
-    return Container(
-      padding: EdgeInsets.all(10.0),
-      margin: EdgeInsets.all(10.0),
-      width: double.infinity,
-      child: GridView.count(
-        crossAxisCount: 4,
-        crossAxisSpacing: 5.0,
-        mainAxisSpacing: 5.0,
-        children: List.generate(scrambled.length, (index) {
-          return gameTile(scrambled[index]);
-        }),
-      ),
-    );
-  }
-
-  Widget gameTile(num) {
-    bool isBlank = num == 0;
-    return GestureDetector(
-      onTap: () {
-        moveTile(num);
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: isBlank ? _white : _green,
-          border: Border.all(),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Center(
-          child: Text(
-            "${isBlank ? ' ' : num}",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 32,
-                color: Colors.green[700]),
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    scramble();
-    return Scaffold(
-      backgroundColor: Colors.blue[100],
-      appBar: AppBar(
-        title: Center(child: Text(widget.title)),
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: board(),
-          ),
-          Center(
-            child: scrambleButton(),
-          ),
-        ],
-      ),
     );
   }
 }

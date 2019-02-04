@@ -103,7 +103,45 @@ class _PuzzleState extends State<Puzzle> {
     );
   }
 
-  Widget gamecell(num) {
+  Widget scrambleButton() {
+    return Container(
+      height: 80.0,
+      margin: EdgeInsets.only(bottom: 20.0),
+      padding: EdgeInsets.all(10.0),
+      child: RaisedButton(
+        highlightElevation: 6.0,
+        color: Colors.lightBlueAccent,
+        splashColor: Colors.blue[100],
+        onPressed: (() {
+          scrambled.clear();
+          setState(() {});
+          scramble();
+        }),
+        child: Text(
+          'Click to Scramble!',
+          style: TextStyle(fontSize: 18, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget board() {
+    return Container(
+      padding: EdgeInsets.all(10.0),
+      margin: EdgeInsets.all(10.0),
+      width: double.infinity,
+      child: GridView.count(
+        crossAxisCount: 4,
+        crossAxisSpacing: 5.0,
+        mainAxisSpacing: 5.0,
+        children: List.generate(scrambled.length, (index) {
+          return gameTile(scrambled[index]);
+        }),
+      ),
+    );
+  }
+
+  Widget gameTile(num) {
     bool isBlank = num == 0;
     return GestureDetector(
       onTap: () {
@@ -139,40 +177,10 @@ class _PuzzleState extends State<Puzzle> {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: Container(
-              padding: EdgeInsets.all(10.0),
-              margin: EdgeInsets.all(10.0),
-              width: double.infinity,
-              child: GridView.count(
-                crossAxisCount: 4,
-                crossAxisSpacing: 5.0,
-                mainAxisSpacing: 5.0,
-                children: List.generate(scrambled.length, (index) {
-                  return gamecell(scrambled[index]);
-                }),
-              ),
-            ),
+            child: board(),
           ),
           Center(
-            child: Container(
-              height: 80.0,
-              margin: EdgeInsets.only(bottom: 20.0),
-              padding: EdgeInsets.all(10.0),
-              child: RaisedButton(
-                highlightElevation: 6.0,
-                color: Colors.lightBlueAccent,
-                splashColor: Colors.blue[100],
-                onPressed: (() {
-                  scrambled.clear();
-                  setState(() {});
-                  scramble();
-                }),
-                child: Text(
-                  'Click to Scramble!',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ),
-            ),
+            child: scrambleButton(),
           ),
         ],
       ),

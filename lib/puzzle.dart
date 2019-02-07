@@ -12,15 +12,19 @@ class Puzzle extends StatefulWidget {
 }
 
 class _PuzzleState extends State<Puzzle> {
-  final nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
+  final winner = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
   final _white = Colors.white70;
   final _green = Colors.greenAccent;
-  List<int> scrambled = [];
+  List<int> scrambled = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
   int min = 0, max = 16;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    scramble();
     return Scaffold(
       backgroundColor: Colors.blue[100],
       appBar: AppBar(
@@ -91,8 +95,8 @@ class _PuzzleState extends State<Puzzle> {
         splashColor: Colors.blue[100],
         onPressed: (() {
           scrambled.clear();
-          setState(() {});
           scramble();
+          setState(() {});
         }),
         child: Text(
           'Click to Scramble!',
@@ -104,7 +108,7 @@ class _PuzzleState extends State<Puzzle> {
 
   void scramble() {
     int num = rnd.nextInt(max);
-    if (scrambled.length == nums.length) {
+    if (scrambled.length == winner.length) {
       return;
     }
 
@@ -114,7 +118,7 @@ class _PuzzleState extends State<Puzzle> {
       scrambled.add(num);
     }
 
-    if (scrambled.length < nums.length) {
+    if (scrambled.length < winner.length) {
       scramble();
     }
   }
@@ -155,8 +159,8 @@ class _PuzzleState extends State<Puzzle> {
 
   bool checkWin() {
     bool win = true;
-    for (var i = 0; i < nums.length; i++) {
-      win = nums[i] == scrambled[i];
+    for (var i = 0; i < winner.length; i++) {
+      win = winner[i] == scrambled[i];
       if (!win) {
         break;
       }

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_web/material.dart';
 import 'dart:math';
 
 var now = new DateTime.now();
@@ -47,7 +47,7 @@ class _PuzzleState extends State<Puzzle> {
     return Container(
       padding: EdgeInsets.all(10.0),
       margin: EdgeInsets.all(10.0),
-      width: double.infinity,
+      width: 600,
       child: GridView.count(
         crossAxisCount: 4,
         crossAxisSpacing: 5.0,

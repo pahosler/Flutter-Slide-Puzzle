@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_slide_puzzle/puzzle.dart';
+import 'package:flutter_web/material.dart';
+import 'package:flutter_slide_puzzle_hummingbird/puzzle.dart';
 import 'dart:math';
 
 var now = new DateTime.now();
